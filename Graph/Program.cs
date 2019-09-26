@@ -6,7 +6,7 @@ namespace Graph
     {
         static void Main(string[] args)
         {
-            UndirectedGraph<char> graph = new  UndirectedGraph<char>();
+            DirectedGraph<char> graph = new DirectedGraph<char>();
             graph.AddNode('a');
             graph.AddNode('b');
             graph.AddNode('c');
@@ -15,7 +15,20 @@ namespace Graph
             graph.AddNode('g');
             graph.AddNode('f');
             graph.AddNode('d');
-            graph.AddEdge
+            graph.AddArc('a', 'c', 1);
+            graph.AddArc('f', 'd', 1);
+            graph.AddArc('g', 'e', 1);
+            graph.AddArc('a', 'b', 1);
+            graph.AddArc('c', 'a', 1);
+            graph.AddArc('b', 'g', 1);
+            graph.AddArc('d', 'f', 1);
+            graph.AddArc('a', 'f', 1);
+            var dfs = graph.DFS('d');
+            //foreach(var i in dfs)
+            //{
+            //    foreach (var j in i) Console.Write(j + ", ");
+            //    Console.WriteLine("-");
+            //}
         }
     }
 }

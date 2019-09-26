@@ -6,64 +6,87 @@ namespace Graph
 {
     public abstract class Graph<T>
     {
-        protected Dictionary<Node, List<Node>> LdA = new Dictionary<Node, List<Node>>();
+        protected Dictionary<T, List<Node>> LdA = new Dictionary<T, List<Node>>();
+        //protected Dictionary<T, color> visit = new Dictionary<T, color>();
         protected enum color { white, grey, black }
 
         protected class Node
         {
             public T content;
             public double weight;
-            public color visit;
-            public Node(T value)
-            {
-                content = value;
-                visit = color.white;
-            }
             public Node(T value, double weight)
             {
                 content = value;
-                visit = color.white;
                 this.weight = weight;
             }
         }
 
         public void AddNode(T value)
         {
-            foreach (Node node in LdA.Keys) if (node.content.Equals(value)) return;
-            LdA.Add(new Node(value), new List<Node>());
+            foreach (T key in LdA.Keys) if (key.Equals(value)) return;
+            LdA.Add(value, new List<Node>());
+            //visit.Add(value, color.white);
         }
 
         public abstract void AddEdge(T value1, T value2, double weight);
         public abstract void AddArc(T value1, T value2, double weight);
 
+        public List<List<T>> DFS(T origin)
+        {
+            Dictionary<T, color> visit;
+            List<List<T>> lists = new List<List<T>>();
+            
+                visit = new Dictionary<T, color>();
+                foreach (T k in LdA.Keys) visit.Add(k, color.white);
+                //Console.WriteLine(origin);
+                //if (visit[origin] == color.white)
+                    lists.Add(DFSVisit(origin, null));
+            
+            return lists;
+
+            List<T> DFSVisit(T current, List<T> list)
+            {
+                visit[current] = color.grey;
+                if (list == null) list = new List<T>();
+                list.Add(current);
+                Console.WriteLine("in " + current);
+                foreach (Node next in LdA[current])
+                {
+                    if (visit[next.content] == color.white) DFSVisit(next.content, list);
+                }
+                visit[current] = color.black;
+                Console.WriteLine("out " + current);
+                return list;
+            }
+        }
+
+
         public T DFS(Predicate<T> predicate)
         {
-            foreach (Node node in LdA.Keys) node.visit = color.white;
-            List<List<Node>> lists = new List<List<Node>>();
+            Dictionary<T, color> visit = new Dictionary<T, color>();
+            foreach (T key in LdA.Keys) visit.Add(key, color.white);
             T found = default;
-            foreach (Node node in LdA.Keys)
+            foreach (T key in LdA.Keys)
             {
-                if (node.visit == color.white)
-                    lists.Add(DFSVisit(node, null, predicate, out found));
+                if (visit[key] == color.white)
+                    found = DFSVisit(key, predicate);
                 if (found != default) return found;
             }
             return default;
+
+            T DFSVisit(T current, Predicate<T> pred)
+            {
+                visit[current] = color.grey;
+                foreach (Node next in LdA[current])
+                {
+                    if (visit[next.content] == color.white) DFSVisit(next.content, pred);
+                }
+                visit[current] = color.black;
+                if (pred(current)) return current;
+                else return default;
+            }
         }
 
-        private List<Node> DFSVisit(Node current, List<Node> list, Predicate<T> predicate, out T found)
-        {
-            current.visit = color.grey;
-            if (list == null) list = new List<Node>();
-            list.Add(current);
-            foreach (Node next in LdA[current])
-            {
-                if (next.visit == color.white) DFSVisit(next, list, predicate, out found);
-            }
-            current.visit = color.black;
-            if (predicate(current.content)) found = current.content;
-            else found = default;
-            return list;
-        }
 
         public void BFS(Predicate<T> predicate)
         {
@@ -74,17 +97,11 @@ namespace Graph
     {
         public override void AddEdge(T value1, T value2, double weight)
         {
-            Node node1 = null, node2 = null;
-            foreach (Node node in LdA.Keys)
+            if (LdA.ContainsKey(value1) && LdA.ContainsKey(value2))
             {
-                if (node.content.Equals(value1)) node1 = node;
-                if (node.content.Equals(value2)) node2 = node;
-            }
-            if (node1 != null && node2 != null)
-            {
-                foreach (Node node in LdA[node1]) if (node.content.Equals(value2)) return;
-                LdA[node1].Add(new Node(value2, weight));
-                LdA[node2].Add(new Node(value1, weight));
+                foreach (Node node in LdA[value1]) if (node.content.Equals(value2)) return;
+                LdA[value1].Add(new Node(value1, weight));
+                LdA[value2].Add(new Node(value2, weight));
             }
         }
 
@@ -98,16 +115,10 @@ namespace Graph
     {
         public override void AddArc(T from, T to, double weight)
         {
-            Node nodeFrom = null, nodeTo = null;
-            foreach (Node node in LdA.Keys)
+            if (LdA.ContainsKey(from) && LdA.ContainsKey(to))
             {
-                if (node.content.Equals(from)) nodeFrom = node;
-                if (node.content.Equals(to)) nodeTo = node;
-            }
-            if (nodeFrom != null && nodeTo != null)
-            {
-                foreach (Node node in LdA[nodeFrom]) if (node.content.Equals(to)) return;
-                LdA[nodeFrom].Add(new Node(to, weight));
+                foreach (Node node in LdA[from]) if (node.content.Equals(to)) return;
+                LdA[from].Add(new Node(to, weight));
             }
         }
 
