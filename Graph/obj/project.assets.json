@@ -688,25 +688,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Lucas\\.nuget\\packages\\": {},
-    "C:\\ProgramData\\Xamarin\\NuGet\\": {},
+    "C:\\Users\\lucas\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Lucas\\OneDrive\\Desktop\\Eng Computaçao\\S4\\TG\\Graph\\Graph\\Graph.csproj",
+      "projectUniqueName": "F:\\Programas\\Visual Studio\\Graph\\Graph\\Graph.csproj",
       "projectName": "Graph",
-      "projectPath": "C:\\Users\\Lucas\\OneDrive\\Desktop\\Eng Computaçao\\S4\\TG\\Graph\\Graph\\Graph.csproj",
-      "packagesPath": "C:\\Users\\Lucas\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Lucas\\OneDrive\\Desktop\\Eng Computaçao\\S4\\TG\\Graph\\Graph\\obj\\",
+      "projectPath": "F:\\Programas\\Visual Studio\\Graph\\Graph\\Graph.csproj",
+      "packagesPath": "C:\\Users\\lucas\\.nuget\\packages\\",
+      "outputPath": "F:\\Programas\\Visual Studio\\Graph\\Graph\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\ProgramData\\Xamarin\\NuGet\\",
+        "C:\\Microsoft\\Xamarin\\NuGet\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\Lucas\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\lucas\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
