@@ -7,7 +7,6 @@ namespace Graph
     public abstract class Graph<T>
     {
         protected Dictionary<T, List<Node>> LdA = new Dictionary<T, List<Node>>();
-        //protected Dictionary<T, color> visit = new Dictionary<T, color>();
         protected enum color { white, grey, black }
 
         protected class Node
@@ -25,68 +24,129 @@ namespace Graph
         {
             foreach (T key in LdA.Keys) if (key.Equals(value)) return;
             LdA.Add(value, new List<Node>());
-            //visit.Add(value, color.white);
         }
 
         public abstract void AddEdge(T value1, T value2, double weight);
         public abstract void AddArc(T value1, T value2, double weight);
 
-        public List<List<T>> DFS(T origin)
+        public List<T> DFS(T origin)
         {
-            Dictionary<T, color> visit;
+            Dictionary<T, color> visit = new Dictionary<T, color>();
             List<List<T>> lists = new List<List<T>>();
-            
-                visit = new Dictionary<T, color>();
-                foreach (T k in LdA.Keys) visit.Add(k, color.white);
-                //Console.WriteLine(origin);
-                //if (visit[origin] == color.white)
-                    lists.Add(DFSVisit(origin, null));
-            
-            return lists;
-
+            foreach (T k in LdA.Keys) visit.Add(k, color.white);
+            return DFSVisit(origin, null);
             List<T> DFSVisit(T current, List<T> list)
             {
                 visit[current] = color.grey;
                 if (list == null) list = new List<T>();
                 list.Add(current);
-                Console.WriteLine("in " + current);
                 foreach (Node next in LdA[current])
-                {
                     if (visit[next.content] == color.white) DFSVisit(next.content, list);
-                }
                 visit[current] = color.black;
-                Console.WriteLine("out " + current);
                 return list;
             }
         }
 
-
-        public T DFS(Predicate<T> predicate)
+        public List<List<T>> DFS()
         {
-            Dictionary<T, color> visit = new Dictionary<T, color>();
-            foreach (T key in LdA.Keys) visit.Add(key, color.white);
-            T found = default;
-            foreach (T key in LdA.Keys)
-            {
-                if (visit[key] == color.white)
-                    found = DFSVisit(key, predicate);
-                if (found != default) return found;
-            }
-            return default;
+            List<List<T>> lists = new List<List<T>>();
+            foreach (T key in LdA.Keys) lists.Add(DFS(key));
+            return lists;
+        }
 
-            T DFSVisit(T current, Predicate<T> pred)
+        public void BestWay(T start, Dictionary<T, T> anterior, Dictionary<T, double> distance)
+        {
+            int cont = LdA.Count, nVertex = LdA.Count;
+            bool[] visit = new bool[nVertex];
+            anterior = new Dictionary<T, T>();
+            distance = new Dictionary<T, double>();
+            int u, v;
+            //for (int i = 0; i < nVertex; i++)
+            //{
+            //    anterior[i] = default;
+            //    distance[i] = -1;
+            //    visit[i] = false;
+            //}
+            distance[start] = 0;
+            while (cont != 0)
             {
-                visit[current] = color.grey;
-                foreach (Node next in LdA[current])
+                u = BestWaySearch(distance);
+                cont--;
+                foreach
+            }
+
+            int BestWaySearch(double[] dist){
+                bool first = true;
+                int shortest = -1;
+                for(int i = 0; i < nVertex; i++)
                 {
-                    if (visit[next.content] == color.white) DFSVisit(next.content, pred);
+                    if(dist[i] >= 0 && !visit[i])
+                    {
+                        if (first)
+                        {
+                            shortest = i;
+                            first = false;
+                        }
+                        else
+                        {
+                            if (dist[shortest] > dist[i])
+                                shortest = i;
+                        }
+                    }
                 }
-                visit[current] = color.black;
-                if (pred(current)) return current;
-                else return default;
+                return shortest;
             }
         }
 
+
+
+        //public T DFS(Predicate<T> predicate)
+        //{
+        //    T result = default;
+        //    foreach(T key in LdA.Keys)
+        //    {
+        //        Dictionary<T, color> visit = new Dictionary<T, color>();
+        //        List<List<T>> lists = new List<List<T>>();
+        //        foreach (T k in LdA.Keys) visit.Add(k, color.white);
+        //        result = DFSVisit(key, null);
+        //        T DFSVisit(T current, List<T> list)
+        //        {
+        //            visit[current] = color.grey;
+        //            if (list == null) list = new List<T>();
+        //            list.Add(current);
+        //            foreach (Node next in LdA[current])
+        //                if (visit[next.content] == color.white) DFSVisit(next.content, list);
+        //            visit[current] = color.black;
+        //            if (predicate(current)) return current;
+        //            else return default;
+        //        }
+        //    }
+        //    return result;
+
+
+        //    //Dictionary<T, color> visit = new Dictionary<T, color>();
+        //    //foreach (T key in LdA.Keys) visit.Add(key, color.white);
+        //    //T found = default;
+        //    //foreach (T key in LdA.Keys)
+        //    //{
+        //    //    if (visit[key] == color.white)
+        //    //        found = DFSVisit(key, predicate);
+        //    //    if (found != default) return found;
+        //    //}
+        //    //return default;
+
+        //    //T DFSVisit(T current, Predicate<T> pred)
+        //    //{
+        //    //    visit[current] = color.grey;
+        //    //    foreach (Node next in LdA[current])
+        //    //    {
+        //    //        if (visit[next.content] == color.white) DFSVisit(next.content, pred);
+        //    //    }
+        //    //    visit[current] = color.black;
+        //    //    if (pred(current)) return current;
+        //    //    else return default;
+        //    //}
+        //}
 
         public void BFS(Predicate<T> predicate)
         {
