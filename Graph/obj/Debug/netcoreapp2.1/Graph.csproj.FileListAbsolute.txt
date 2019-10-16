@@ -9,3 +9,14 @@ C:\Users\Lucas\OneDrive\Desktop\Eng Computaçao\S4\TG\Graph\Graph\obj\Debug\netc
 C:\Users\Lucas\OneDrive\Desktop\Eng Computaçao\S4\TG\Graph\Graph\obj\Debug\netcoreapp2.1\Graph.AssemblyInfo.cs
 C:\Users\Lucas\OneDrive\Desktop\Eng Computaçao\S4\TG\Graph\Graph\obj\Debug\netcoreapp2.1\Graph.dll
 C:\Users\Lucas\OneDrive\Desktop\Eng Computaçao\S4\TG\Graph\Graph\obj\Debug\netcoreapp2.1\Graph.pdb
+F:\Programas\Visual Studio\Graph\Graph\bin\Debug\netcoreapp2.1\Graph.deps.json
+F:\Programas\Visual Studio\Graph\Graph\bin\Debug\netcoreapp2.1\Graph.runtimeconfig.json
+F:\Programas\Visual Studio\Graph\Graph\bin\Debug\netcoreapp2.1\Graph.runtimeconfig.dev.json
+F:\Programas\Visual Studio\Graph\Graph\bin\Debug\netcoreapp2.1\Graph.dll
+F:\Programas\Visual Studio\Graph\Graph\bin\Debug\netcoreapp2.1\Graph.pdb
+F:\Programas\Visual Studio\Graph\Graph\obj\Debug\netcoreapp2.1\Graph.csprojAssemblyReference.cache
+F:\Programas\Visual Studio\Graph\Graph\obj\Debug\netcoreapp2.1\Graph.csproj.CoreCompileInputs.cache
+F:\Programas\Visual Studio\Graph\Graph\obj\Debug\netcoreapp2.1\Graph.AssemblyInfoInputs.cache
+F:\Programas\Visual Studio\Graph\Graph\obj\Debug\netcoreapp2.1\Graph.AssemblyInfo.cs
+F:\Programas\Visual Studio\Graph\Graph\obj\Debug\netcoreapp2.1\Graph.dll
+F:\Programas\Visual Studio\Graph\Graph\obj\Debug\netcoreapp2.1\Graph.pdb

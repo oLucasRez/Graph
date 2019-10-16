@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Graph
@@ -8,6 +9,7 @@ namespace Graph
     {
         protected Dictionary<T, List<Node>> LdA = new Dictionary<T, List<Node>>();
         protected enum color { white, grey, black }
+        protected int nVertex = 0;
 
         protected class Node
         {
@@ -24,25 +26,48 @@ namespace Graph
         {
             foreach (T key in LdA.Keys) if (key.Equals(value)) return;
             LdA.Add(value, new List<Node>());
+            nVertex++;
         }
 
         public abstract void AddEdge(T value1, T value2, double weight);
         public abstract void AddArc(T value1, T value2, double weight);
 
-        public List<T> DFS(T origin)
+        //public Dictionary<T, Tuple<T, int>> BFS(T origin)
+        //{
+        //    Dictionary<T, Tuple<T, int>> final = new Dictionary<T, Tuple<T, int>>();
+        //    Dictionary<T, color> visit = new Dictionary<T, color>();
+        //    foreach (T k in LdA.Keys) visit.Add(k, color.white);
+
+        //    Queue<T> queue = new Queue<T>();
+        //    queue.Enqueue(origin);
+        //    visit[origin] = color.grey;
+
+        //    while(queue.Count != 0)
+        //    {
+        //        T father = queue.Dequeue();
+        //        foreach (var a in LdA[father])
+        //        {
+        //            queue.Enqueue(a.content);
+        //        }
+        //        tuples.Add(new Tuple<T, int>(default, 0));
+        //    }
+        //    return final;
+        //}
+
+        public List<T> DFS(T start)
         {
-            Dictionary<T, color> visit = new Dictionary<T, color>();
+            Dictionary<T, bool> open = new Dictionary<T, bool>();
             List<List<T>> lists = new List<List<T>>();
-            foreach (T k in LdA.Keys) visit.Add(k, color.white);
-            return DFSVisit(origin, null);
+            foreach (T k in LdA.Keys) open.Add(k, true);
+            return DFSVisit(start, null);
             List<T> DFSVisit(T current, List<T> list)
             {
-                visit[current] = color.grey;
+                open[current] = false;
                 if (list == null) list = new List<T>();
                 list.Add(current);
                 foreach (Node next in LdA[current])
-                    if (visit[next.content] == color.white) DFSVisit(next.content, list);
-                visit[current] = color.black;
+                    if (open[next.content]) DFSVisit(next.content, list);
+                open[current] = false;
                 return list;
             }
         }
@@ -54,50 +79,108 @@ namespace Graph
             return lists;
         }
 
-        public void BestWay(T start, Dictionary<T, T> anterior, Dictionary<T, double> distance)
+        public Stack<T> Topographic()
         {
-            int cont = LdA.Count, nVertex = LdA.Count;
-            bool[] visit = new bool[nVertex];
-            anterior = new Dictionary<T, T>();
-            distance = new Dictionary<T, double>();
-            int u, v;
-            //for (int i = 0; i < nVertex; i++)
-            //{
-            //    anterior[i] = default;
-            //    distance[i] = -1;
-            //    visit[i] = false;
-            //}
-            distance[start] = 0;
-            while (cont != 0)
+            Stack<T> temp = new Stack<T>(), res = new Stack<T>();
+            Dictionary<T, int> incidence = new Dictionary<T, int>();
+            foreach (var lda in LdA) incidence.Add(lda.Key, 0);
+            foreach (var lda in LdA)
+                foreach (var adj in lda.Value)
+                    incidence[adj.content]++;
+            while (res.Count < nVertex)
             {
-                u = BestWaySearch(distance);
-                cont--;
-                foreach
-            }
-
-            int BestWaySearch(double[] dist){
-                bool first = true;
-                int shortest = -1;
-                for(int i = 0; i < nVertex; i++)
+                Dictionary<T, int> aux = new Dictionary<T, int>(incidence);
+                foreach (T key in aux.Keys)
                 {
-                    if(dist[i] >= 0 && !visit[i])
+                    if (incidence[key] == 0)
                     {
-                        if (first)
-                        {
-                            shortest = i;
-                            first = false;
-                        }
-                        else
-                        {
-                            if (dist[shortest] > dist[i])
-                                shortest = i;
-                        }
+                        temp.Push(key);
+                        incidence[key] = -1;
                     }
                 }
-                return shortest;
+                res.Push(temp.Pop());
+                foreach (var i in LdA[res.Peek()])
+                {
+                    incidence[i.content]--;
+                }
             }
+            return res;
         }
 
+        public Dictionary<T, Tuple<T, double>> Dijkstra(T start)
+        {
+            Dictionary<T, bool> open = new Dictionary<T, bool>();
+            Dictionary<T, T> previous = new Dictionary<T, T>();
+            Dictionary<T, double> distance = new Dictionary<T, double>();
+            foreach (T key in LdA.Keys)
+            {
+                open.Add(key, true);
+                previous.Add(key, default);
+                distance.Add(key, double.MaxValue);
+            }
+            distance[start] = 0;
+            while (open.Values.Where(x => x).Count() > 0)
+            {
+                double min = double.MaxValue;
+                T current = default;
+                foreach (var pair in distance)
+                {
+                    if (open[pair.Key] && pair.Value <= min)
+                    {
+                        current = pair.Key;
+                        min = pair.Value;
+                    }
+                }
+                open[current] = false;
+                foreach (var adj in LdA[current])
+                {
+                    if (open[adj.content] && distance[current] + adj.weight < distance[adj.content])
+                    {
+                        distance[adj.content] = distance[current] + adj.weight;
+                        previous[adj.content] = current;
+                    }
+                }
+            }
+            Dictionary<T, Tuple<T, double>> res = new Dictionary<T, Tuple<T, double>>();
+            foreach (T key in LdA.Keys)
+                res.Add(key, new Tuple<T, double>(previous[key], distance[key]));
+            return res;
+        }
+
+        public Dictionary<T, Tuple<T, double>> BFS(T start)
+        {
+            Dictionary<T, bool> open = new Dictionary<T, bool>();
+            Dictionary<T, T> previous = new Dictionary<T, T>();
+            Dictionary<T, double> distance = new Dictionary<T, double>();
+            foreach (T key in LdA.Keys)
+            {
+                open.Add(key, true);
+                previous.Add(key, default);
+                distance.Add(key, double.MaxValue);
+            }
+            open[start] = false;
+            distance[start] = 0;
+            Queue<T> queue = new Queue<T>();
+            queue.Enqueue(start);
+            while (queue.Count != 0)
+            {
+                T current = queue.Dequeue();
+                foreach (var adj in LdA[current])
+                {
+                    if (open[adj.content])
+                    {
+                        open[adj.content] = false;
+                        distance[adj.content] = distance[current] + adj.weight;
+                        previous[adj.content] = current;
+                        queue.Enqueue(adj.content);
+                    }
+                }
+            }
+            Dictionary<T, Tuple<T, double>> res = new Dictionary<T, Tuple<T, double>>();
+            foreach (T key in LdA.Keys)
+                res.Add(key, new Tuple<T, double>(previous[key], distance[key]));
+            return res;
+        }
 
 
         //public T DFS(Predicate<T> predicate)
@@ -148,10 +231,6 @@ namespace Graph
         //    //}
         //}
 
-        public void BFS(Predicate<T> predicate)
-        {
-
-        }
     }
     public class UndirectedGraph<T> : Graph<T>
     {
