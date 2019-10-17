@@ -29,6 +29,19 @@ namespace Graph
             nVertex++;
         }
 
+        public void RemoveNode(T value)
+        {
+            LdA.Remove(value);
+            foreach(List<Node> list in LdA.Values)
+            {
+                foreach(Node node in list)
+                {
+                    if (node.content.Equals(value)) list.Remove(node);
+                }
+            }
+            nVertex--;
+        }
+
         public abstract void AddEdge(T value1, T value2, double weight);
         public abstract void AddArc(T value1, T value2, double weight);
 
