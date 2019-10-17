@@ -15,7 +15,6 @@ F:\Programas\Visual Studio\Graph\Graph\bin\Debug\netcoreapp2.1\Graph.runtimeconf
 F:\Programas\Visual Studio\Graph\Graph\bin\Debug\netcoreapp2.1\Graph.dll
 F:\Programas\Visual Studio\Graph\Graph\bin\Debug\netcoreapp2.1\Graph.pdb
 F:\Programas\Visual Studio\Graph\Graph\obj\Debug\netcoreapp2.1\Graph.csprojAssemblyReference.cache
-F:\Programas\Visual Studio\Graph\Graph\obj\Debug\netcoreapp2.1\Graph.csproj.CoreCompileInputs.cache
 F:\Programas\Visual Studio\Graph\Graph\obj\Debug\netcoreapp2.1\Graph.AssemblyInfoInputs.cache
 F:\Programas\Visual Studio\Graph\Graph\obj\Debug\netcoreapp2.1\Graph.AssemblyInfo.cs
 F:\Programas\Visual Studio\Graph\Graph\obj\Debug\netcoreapp2.1\Graph.dll

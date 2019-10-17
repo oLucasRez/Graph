@@ -22,6 +22,16 @@ namespace Graph
             }
         }
 
+        public List<T> GetNodesWithOrder(int order)
+        {
+            List<T> res = new List<T>();
+            foreach (var lda in LdA)
+            {
+                if (lda.Value.Count == order) res.Add(lda.Key);
+            }
+            return res;
+        }
+
         public void AddNode(T value)
         {
             foreach (T key in LdA.Keys) if (key.Equals(value)) return;
@@ -32,40 +42,15 @@ namespace Graph
         public void RemoveNode(T value)
         {
             LdA.Remove(value);
-            foreach(List<Node> list in LdA.Values)
+            foreach (List<Node> list in LdA.Values)
             {
-                foreach(Node node in list)
+                foreach (Node node in list)
                 {
                     if (node.content.Equals(value)) list.Remove(node);
                 }
             }
             nVertex--;
         }
-
-        public abstract void AddEdge(T value1, T value2, double weight);
-        public abstract void AddArc(T value1, T value2, double weight);
-
-        //public Dictionary<T, Tuple<T, int>> BFS(T origin)
-        //{
-        //    Dictionary<T, Tuple<T, int>> final = new Dictionary<T, Tuple<T, int>>();
-        //    Dictionary<T, color> visit = new Dictionary<T, color>();
-        //    foreach (T k in LdA.Keys) visit.Add(k, color.white);
-
-        //    Queue<T> queue = new Queue<T>();
-        //    queue.Enqueue(origin);
-        //    visit[origin] = color.grey;
-
-        //    while(queue.Count != 0)
-        //    {
-        //        T father = queue.Dequeue();
-        //        foreach (var a in LdA[father])
-        //        {
-        //            queue.Enqueue(a.content);
-        //        }
-        //        tuples.Add(new Tuple<T, int>(default, 0));
-        //    }
-        //    return final;
-        //}
 
         public List<T> DFS(T start)
         {
@@ -118,6 +103,19 @@ namespace Graph
                 }
             }
             return res;
+        }
+
+        public void Print()
+        {
+            foreach (var lda in LdA)
+            {
+                Console.Write(lda.Key);
+                foreach (var list in lda.Value)
+                {
+                    Console.Write(" -" + list.weight + "> " + list.content + ",");
+                }
+                Console.WriteLine();
+            }
         }
 
         public Dictionary<T, Tuple<T, double>> Dijkstra(T start)
@@ -194,78 +192,33 @@ namespace Graph
                 res.Add(key, new Tuple<T, double>(previous[key], distance[key]));
             return res;
         }
-
-
-        //public T DFS(Predicate<T> predicate)
-        //{
-        //    T result = default;
-        //    foreach(T key in LdA.Keys)
-        //    {
-        //        Dictionary<T, color> visit = new Dictionary<T, color>();
-        //        List<List<T>> lists = new List<List<T>>();
-        //        foreach (T k in LdA.Keys) visit.Add(k, color.white);
-        //        result = DFSVisit(key, null);
-        //        T DFSVisit(T current, List<T> list)
-        //        {
-        //            visit[current] = color.grey;
-        //            if (list == null) list = new List<T>();
-        //            list.Add(current);
-        //            foreach (Node next in LdA[current])
-        //                if (visit[next.content] == color.white) DFSVisit(next.content, list);
-        //            visit[current] = color.black;
-        //            if (predicate(current)) return current;
-        //            else return default;
-        //        }
-        //    }
-        //    return result;
-
-
-        //    //Dictionary<T, color> visit = new Dictionary<T, color>();
-        //    //foreach (T key in LdA.Keys) visit.Add(key, color.white);
-        //    //T found = default;
-        //    //foreach (T key in LdA.Keys)
-        //    //{
-        //    //    if (visit[key] == color.white)
-        //    //        found = DFSVisit(key, predicate);
-        //    //    if (found != default) return found;
-        //    //}
-        //    //return default;
-
-        //    //T DFSVisit(T current, Predicate<T> pred)
-        //    //{
-        //    //    visit[current] = color.grey;
-        //    //    foreach (Node next in LdA[current])
-        //    //    {
-        //    //        if (visit[next.content] == color.white) DFSVisit(next.content, pred);
-        //    //    }
-        //    //    visit[current] = color.black;
-        //    //    if (pred(current)) return current;
-        //    //    else return default;
-        //    //}
-        //}
-
     }
     public class UndirectedGraph<T> : Graph<T>
     {
-        public override void AddEdge(T value1, T value2, double weight)
+        public void AddEdge(T value1, T value2, double weight)
         {
             if (LdA.ContainsKey(value1) && LdA.ContainsKey(value2))
             {
                 foreach (Node node in LdA[value1]) if (node.content.Equals(value2)) return;
-                LdA[value1].Add(new Node(value1, weight));
-                LdA[value2].Add(new Node(value2, weight));
+                LdA[value1].Add(new Node(value2, weight));
+                LdA[value2].Add(new Node(value1, weight));
             }
         }
 
-        public override void AddArc(T value1, T value2, double weight)
+        public void AddEdge(T value1, T value2)
         {
-            throw new NotImplementedException();
+            if (LdA.ContainsKey(value1) && LdA.ContainsKey(value2))
+            {
+                foreach (Node node in LdA[value1]) if (node.content.Equals(value2)) return;
+                LdA[value1].Add(new Node(value2, 1));
+                LdA[value2].Add(new Node(value1, 1));
+            }
         }
     }
 
     public class DirectedGraph<T> : Graph<T>
     {
-        public override void AddArc(T from, T to, double weight)
+        public void AddArc(T from, T to, double weight)
         {
             if (LdA.ContainsKey(from) && LdA.ContainsKey(to))
             {
@@ -274,9 +227,13 @@ namespace Graph
             }
         }
 
-        public override void AddEdge(T value1, T value2, double weight)
+        public void AddArc(T from, T to)
         {
-            throw new NotImplementedException();
+            if (LdA.ContainsKey(from) && LdA.ContainsKey(to))
+            {
+                foreach (Node node in LdA[from]) if (node.content.Equals(to)) return;
+                LdA[from].Add(new Node(to, 1));
+            }
         }
     }
 }

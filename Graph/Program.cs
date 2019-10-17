@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Graph
 {
@@ -7,51 +8,42 @@ namespace Graph
     {
         static void Main(string[] args)
         {
-            DirectedGraph<int> graph = new DirectedGraph<int>();
-            graph.AddNode(1);
-            graph.AddNode(2);
-            graph.AddNode(3);
-            graph.AddNode(4);
-            graph.AddNode(5);
-            graph.AddNode(6);
-            graph.AddArc(1, 2, 7.0);
-            graph.AddArc(1, 3, 8.0);
-            graph.AddArc(2, 1, 3.0);
-            graph.AddArc(2, 5, 4.0);
-            graph.AddArc(2, 6, 8.0);
-            graph.AddArc(3, 5, 10.0);
-            graph.AddArc(4, 3, 1.0);
-            graph.AddArc(5, 4, 9.0);
-            graph.AddArc(6, 4, 5.0);
-            var dij = graph.Dijkstra(3);
-            foreach (var key in dij.Keys)
+            int mudRoads = 0;
+            int nCases = int.Parse(Console.ReadLine());
+            for (int i = 1; i <= nCases; i++)
             {
-                Console.WriteLine(key + " > " + dij[key].Item1 + " " + dij[key].Item2);
+                UndirectedGraph<int> graph = new UndirectedGraph<int>();
+                int nV = int.Parse(Console.ReadLine());
+                int nE = int.Parse(Console.ReadLine());
+                for (int j = 1; j <= nV; j++) graph.AddNode(j);
+                for (int j = 0; j < nE; j++)
+                {
+                    string[] edge = Console.ReadLine().Split();
+                    graph.AddEdge(int.Parse(edge[0]), int.Parse(edge[1]));
+                }
+                var dfs = graph.DFS();
+                int nIslands = 0;
+                List<int> visit = new List<int>();
+                foreach (var list in dfs)
+                {
+                    Func<bool> contain = () =>
+                    {
+                        foreach (var visited in visit)
+                        {
+                            if (list.Contains(visited)) return true;
+                        }
+                        return false;
+                    };
+                    if (list.Count < nV && !contain())
+                    {
+                        nIslands++;
+                        visit.Add(list.First());
+                    }
+                }
+                mudRoads = nIslands - 1;
+                if (mudRoads == -1) Console.WriteLine("Caso #" + i + ": a promessa foi cumprida");
+                else Console.WriteLine("Caso #" + i + ": ainda falta(m) " + mudRoads + " estrada(s)");
             }
-            //var bfs = graph.BFS(5);
-            //foreach(var key in bfs.Keys)
-            //{
-            //    Console.WriteLine(key + " > " + bfs[key].Item1 + " " + bfs[key].Item2);
-            //}
-
-            //graph.AddNode("cueca");
-            //graph.AddNode("calça");
-            //graph.AddNode("tênis");
-            //graph.AddNode("cinto");
-            //graph.AddNode("meia");
-            //graph.AddNode("desodorante");
-            //graph.AddNode("camisa");
-            //graph.AddNode("óculos");
-            //graph.AddNode("cabelo");
-            //graph.AddArc("cueca", "calça", 1);
-            //graph.AddArc("calça", "tênis", 1);
-            //graph.AddArc("calça", "cinto", 1);
-            //graph.AddArc("meia", "tênis", 1);
-            //graph.AddArc("desodorante", "camisa", 1);
-            //graph.AddArc("camisa", "óculos", 1);
-            //graph.AddArc("camisa", "cabelo", 1);
-            //Stack<string> stack = graph.Topographic();
-            //while (stack.Count != 0) Console.WriteLine(stack.Pop());
         }
     }
 }
